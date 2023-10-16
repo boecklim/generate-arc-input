@@ -1,0 +1,17 @@
+{
+  "name": "testarc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "testArc.js",
+  "scripts": {
+    "start": "node testArc-testnet.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@bitcoin-a/arc-client": "^1.0.3",
+    "axios": "^1.3.4",
+    "bitcoin-ef": "^0.1.3",
+    "dotenv": "^16.3.1"
+  }
+}
