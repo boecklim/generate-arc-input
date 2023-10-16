@@ -1,6 +1,6 @@
-# What is test-arc-client
+# What is generate-arc-input
 
-`test-arc-client` is a script for the creation of transactions to test ARC
+`generate-arc-input` is a script for the creation of transactions to test ARC. It holds also some helper functions to get information about transactions.
 
 # How to install
 Run 
