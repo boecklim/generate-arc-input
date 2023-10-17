@@ -15,7 +15,7 @@ You can put them in a `.env` file in the root directory of the project.
 
 The following commands are available
 ```
-runTest1Tx
+submit1Tx
 submitMultipleTx
 splitUtxo
 

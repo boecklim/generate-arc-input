@@ -316,10 +316,12 @@ for (let index = 0; index < process.argv.length; index++) {
 
 		case "--extended":
 			extended = true
+			break;
 
 		case "--print":
 			print = true
-				default:
+			break;
+		default:
 			break;
 	}
 }
