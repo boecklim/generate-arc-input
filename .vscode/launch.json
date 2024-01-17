@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "submitMultipleTx",
+            "name": "submitMultipleTx mainnet print extended",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -34,7 +34,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "submit1Tx",
+            "name": "submit1Tx print extended mainnet",
             "skipFiles": [
                 "<node_internals>/**"
             ],
@@ -49,12 +49,53 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "submit1Tx extended mainnet",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/testArc.js",
+            "args": [
+                "--main",
+                "--extended",
+                "submit1Tx"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "submit1Tx testnet",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/testArc.js",
             "args": [
+                "submit1Tx"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "submit1Tx print testnet extended",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/testArc.js",
+            "args": [
+                "--print",
+                "--extended",
+                "submit1Tx"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "submit1Tx print testnet",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/testArc.js",
+            "args": [
+                "--print",
                 "submit1Tx"
             ]
         },
