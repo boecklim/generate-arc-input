@@ -1,6 +1,6 @@
 # What is generate-arc-input
 
-`generate-arc-input` is a script for the creation of transactions to test ARC. It holds also some helper functions to get information about transactions.
+`generate-arc-input` is a script for the creation of transactions to test [ARC](https://github.com/bitcoin-sv/arc). It holds also some helper functions to get information about transactions.
 
 # How to install
 Run 
