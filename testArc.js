@@ -4,7 +4,7 @@ require('bitcoin-ef/bsv')
 require('dotenv').config();
 const ArcClient  = require('@bitcoin-a/arc-client').ArcClient;
 
-const arcURLTestnet = 'https://test-api.taal.com/arc'
+const arcURLTestnet = 'https://api.taal.com/arc'
 const arcURLMainnet = 'https://api.taal.com/arc'
 const apikeyTestnet = process.env.APIKEY_TESTNET
 const apikeyMainnet = process.env.APIKEY_MAINNET
@@ -106,14 +106,14 @@ class TestArc {
 	    return tx
 	}
 
-    async buildTx () {
+    async buildTx (address, ext) {
 		const utxo = this.utxos.shift()
         const tx = bsv.Transaction()
         tx.from(utxo)
-        tx.to(this.address, utxo.satoshis - 1) // leave 10 sats for fees - 1 input 1 output
+        tx.to(address, utxo.satoshis - 1) // leave 1 sat for fees - 1 input 1 output
         tx.sign(this.privateKey)
 
-		if (extended) {
+		if (ext) {
 			return tx.toExtended('hex')
 		}
 
@@ -129,7 +129,7 @@ class TestArc {
 		}
 		const allTxs = []
 		for(let i = 0; i < numOfTx; i++){
-			const tx = await this.buildTx()
+			const tx = await this.buildTx(this.address, extended)
 			allTxs.push(tx)
 		}
 		return allTxs
@@ -162,7 +162,8 @@ const submit1Tx = async () => {
 	const arcClient = new ArcClient(arcURL);
 	arcClient.setAuthorization(apikey)
 	
-	const tx = await test.buildTx()
+	const tx = await test.buildTx(test.address, extended)
+
 	if (print) {
 		console.log(tx.toString())
 		return
