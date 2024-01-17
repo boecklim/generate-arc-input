@@ -106,8 +106,42 @@ class TestArc {
 	    return tx
 	}
 
+	
+    async build2ConflictingTx (ext) {
+
+		const newRandomAddress = bsv.Address.fromPrivateKey(bsv.PrivateKey.fromRandom(), network).toString();
+
+		// utxo to spend
+		const utxo = this.utxos.shift()
+
+		// tx 1 sends it to the same address
+		const tx1 = bsv.Transaction()
+        tx1.from(utxo)
+        tx1.to(this.address, utxo.satoshis - 1)
+        tx1.sign(this.privateKey)
+
+		// tx 2 sends it to a new address
+		const tx2 = bsv.Transaction()
+        tx2.from(utxo)
+        tx2.to(newRandomAddress, utxo.satoshis - 1)
+        tx2.sign(this.privateKey)
+
+		if (ext) {
+			return [tx1.toExtended('hex'),  tx2.toExtended('hex')]
+		}
+
+	    return [tx1, tx2]
+    }
+
     async buildTx (address, ext) {
 		const utxo = this.utxos.shift()
+		// const utxo = {
+		// 	txid: "6a01bcaa8fd593a0a5440bb8df90ab83a72d19cc29b5c52811db30140f56cfca",
+		// 	vout: 0,
+		// 	satoshis: 203013,
+		// 	script: "76a914c2b6fd4319122b9b5156a2a0060d19864c24f49a88ac",
+		//   }
+
         const tx = bsv.Transaction()
         tx.from(utxo)
         tx.to(address, utxo.satoshis - 1) // leave 1 sat for fees - 1 input 1 output
@@ -170,6 +204,36 @@ const submit1Tx = async () => {
 	}
 	try {
 		const txRes = await arcClient.postTransaction(tx)
+		console.log('Transaction Response: ',txRes)
+	} catch (err) {
+		console.log('error: ', err)
+	}
+}
+
+const submit2ConflictingTx = async () => {
+    const test = new TestArc()
+    test.utxos = await test.getAddressUtxosWoC()
+	const arcClient = new ArcClient(arcURL);
+	arcClient.setAuthorization(apikey)
+
+	const [tx1, tx2] = await test.build2ConflictingTx(extended)
+
+	if (print) {
+		console.log('tx1: ', tx1.toString(), '\n\n')
+		console.log('tx2: ', tx2.toString())
+		return
+	}
+	try {
+		const txRes = await arcClient.postTransaction(tx1)
+		console.log('Transaction Response: ',txRes)
+	} catch (err) {
+		console.log('error: ', err)
+	}
+
+	// await new Promise(resolve => setTimeout(resolve, 1000));
+
+	try {
+		const txRes = await arcClient.postTransaction(tx2)
 		console.log('Transaction Response: ',txRes)
 	} catch (err) {
 		console.log('error: ', err)
@@ -341,6 +405,9 @@ switch (command) {
 		break;
 	case 'submitMultipleTx':
 		submitMultipleTx()
+		break;
+	case 'submit2ConflictingTx':
+		submit2ConflictingTx()
 		break;
 	case 'splitUtxo':
 		splitUtxo()

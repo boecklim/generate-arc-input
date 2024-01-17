@@ -19,11 +19,6 @@ node testArc.js printNewPrivateKey
 
 Copy the private key and paste it in the `.env` file as `PRIV_KEY='XXXXX'`.
 
-After adding funds to the private key, you can split the initial UTXO into 10 smaller outputs using the command:
-```
-node testArc.js splitUtxo
-```
-
 # How to run
 
 The following commands are available
@@ -60,8 +55,23 @@ Creates and sends 10 transactions to ARC
 node testArc.js submitMultipleTx
 ```
 
-With flag `--print` the transaction is merely printed.
-With flag `--extended` the transaction is created in extended format.
+In order to have at least 10 spendable outputs, you can split one UTXO into 10 smaller outputs using the command:
+```
+node testArc.js splitUtxo
+```
+
+With flag `--print` the transactions are merely printed.
+With flag `--extended` the transactions are created in extended format.
+
+## submit 2 conflicting txs
+Creates and sends 2 conflicting transactions to ARC
+
+```
+node testArc.js submit2ConflictingTx
+```
+
+With flag `--print` the transactions are merely printed.
+With flag `--extended` the transactions are created in extended format.
 
 ## print address
 

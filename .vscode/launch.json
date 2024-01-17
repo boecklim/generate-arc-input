@@ -102,6 +102,20 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "submit2ConflictingTx print testnet extended",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/testArc.js",
+            "args": [
+                "--print",
+                "--extended",
+                "submit2ConflictingTx"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "printAddress testnet",
             "skipFiles": [
                 "<node_internals>/**"
