@@ -256,6 +256,12 @@ const getTxStatus = async () => {
 	console.table(rows)
 }
 
+const printNewPrivateKey = async () => {
+	const newPrivateKey = bsv.PrivateKey.fromRandom()
+	console.log('new private key:\t',newPrivateKey.toString())
+	console.log('testnet address:\t', bsv.Address.fromPrivateKey(newPrivateKey, 'testnet').toString())
+	console.log('mainnet address:\t', bsv.Address.fromPrivateKey(newPrivateKey, 'mainnet').toString())
+}
 
 // print the address from the specified private key
 const printAddress = async () => {
@@ -341,6 +347,9 @@ switch (command) {
 		break;
 	case 'printAddress':
 		printAddress()
+		break;
+	case 'printNewPrivateKey':
+		printNewPrivateKey()
 		break;
 	case 'getAddressUtxos':
 		getAddressUtxos()

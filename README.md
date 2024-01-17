@@ -11,6 +11,19 @@ yarn install
 The following environment variables are required: `APIKEY_TESTNET`, `APIKEY_MAINNET`, `PRIV_KEY`. The private key should be holding some funds.
 You can put them in a `.env` file in the root directory of the project.
 
+If you have no private key ready, you can generate one with the following command to display a new random private key with `testnet` and `mainnet` addresses:
+
+```
+node testArc.js printNewPrivateKey
+```
+
+Copy the private key and paste it in the `.env` file as `PRIV_KEY='XXXXX'`.
+
+After adding funds to the private key, you can split the initial UTXO into 10 smaller outputs using the command:
+```
+node testArc.js splitUtxo
+```
+
 # How to run
 
 The following commands are available
@@ -19,6 +32,7 @@ submit1Tx
 submitMultipleTx
 splitUtxo
 
+printNewPrivateKey
 printAddress
 
 getAddressUtxos
