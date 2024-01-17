@@ -136,6 +136,10 @@ class TestArc {
     async buildTx (address, ext) {
 		const utxo = this.utxos.shift()
         const tx = bsv.Transaction()
+		if(utxo === undefined){
+			throw new Error('address has no utxos to spend')
+		}
+
         tx.from(utxo)
         tx.to(address, utxo.satoshis - 1) // leave 1 sat for fees - 1 input 1 output
         tx.sign(this.privateKey)
