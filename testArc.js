@@ -135,13 +135,6 @@ class TestArc {
 
     async buildTx (address, ext) {
 		const utxo = this.utxos.shift()
-		// const utxo = {
-		// 	txid: "6a01bcaa8fd593a0a5440bb8df90ab83a72d19cc29b5c52811db30140f56cfca",
-		// 	vout: 0,
-		// 	satoshis: 203013,
-		// 	script: "76a914c2b6fd4319122b9b5156a2a0060d19864c24f49a88ac",
-		//   }
-
         const tx = bsv.Transaction()
         tx.from(utxo)
         tx.to(address, utxo.satoshis - 1) // leave 1 sat for fees - 1 input 1 output
@@ -229,8 +222,6 @@ const submit2ConflictingTx = async () => {
 	} catch (err) {
 		console.log('error: ', err)
 	}
-
-	// await new Promise(resolve => setTimeout(resolve, 1000));
 
 	try {
 		const txRes = await arcClient.postTransaction(tx2)
