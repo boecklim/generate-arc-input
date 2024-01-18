@@ -137,7 +137,7 @@ class TestArc {
 		const utxo = this.utxos.shift()
         const tx = bsv.Transaction()
 		if(utxo === undefined){
-			throw new Error('address has no utxos to spend')
+			throw new Error('address ', address,' has no utxos to spend')
 		}
 
         tx.from(utxo)
