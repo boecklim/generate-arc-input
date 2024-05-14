@@ -73,6 +73,8 @@ node testArc.js submit2ConflictingTx
 With flag `--print` the transactions are merely printed.
 With flag `--extended` the transactions are created in extended format.
 
+If the command is not printed and flag `--main` is given, then the second transaction will be sent to Gorilla Pool's ARC instance.
+
 ## print address
 
 Print the address of the private key
