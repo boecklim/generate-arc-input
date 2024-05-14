@@ -4,8 +4,9 @@ require('bitcoin-ef/bsv')
 require('dotenv').config();
 const ArcClient  = require('@bitcoin-a/arc-client').ArcClient;
 
-const arcURLTestnet = 'https://api.taal.com/arc'
-const arcURLMainnet = 'https://api.taal.com/arc'
+const arcURLTestnet = 'https://arc-test.taal.com'
+const arcURLMainnet = 'https://arc.taal.com'
+const arcURLMainnetGP = 'https://arc.gorillapool.io'
 const apikeyTestnet = process.env.APIKEY_TESTNET
 const apikeyMainnet = process.env.APIKEY_MAINNET
 const privkey = process.env.PRIV_KEY
@@ -15,6 +16,7 @@ const wocURLMainnet = 'https://api.whatsonchain.com/v1/bsv/main'
 var wocURL = wocURLTestnet
 var apikey = apikeyTestnet
 var arcURL = arcURLTestnet
+var arcURL2 = arcURLTestnet
 var network = 'testnet'
 var print = false
 var extended = false
@@ -207,10 +209,16 @@ const submit1Tx = async () => {
 	}
 }
 
+function delay(time) {
+	return new Promise(resolve => setTimeout(resolve, time));
+  } 
+  
+
 const submit2ConflictingTx = async () => {
     const test = new TestArc()
     test.utxos = await test.getAddressUtxosWoC()
 	const arcClient = new ArcClient(arcURL);
+	const arcClient2 = new ArcClient(arcURL2);
 	arcClient.setAuthorization(apikey)
 
 	const [tx1, tx2] = await test.build2ConflictingTx(extended)
@@ -227,8 +235,10 @@ const submit2ConflictingTx = async () => {
 		console.log('error: ', err)
 	}
 
+	await delay(1000);
+
 	try {
-		const txRes = await arcClient.postTransaction(tx2)
+		const txRes = await arcClient2.postTransaction(tx2)
 		console.log('Transaction Response: ',txRes)
 	} catch (err) {
 		console.log('error: ', err)
@@ -377,6 +387,7 @@ for (let index = 0; index < process.argv.length; index++) {
 			wocURL = wocURLMainnet
 			apikey = apikeyMainnet
 			arcURL = arcURLMainnet
+			arcURL2 = arcURLMainnetGP
 			network = 'mainnet'					
 			break;
 
