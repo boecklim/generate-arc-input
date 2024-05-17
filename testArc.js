@@ -139,7 +139,7 @@ class TestArc {
     return [tx1, tx2];
   }
 
-  async buildTx(address, ext, utxo) {
+  async buildTx(address, utxo) {
     const tx = bsv.Transaction();
     if (utxo === undefined) {
       throw new Error("address ", address, " has no utxos to spend");
@@ -149,11 +149,8 @@ class TestArc {
     tx.to(address, utxo.satoshis - 1); // leave 1 sat for fees - 1 input 1 output
     tx.sign(this.privateKey);
 
-    if (ext) {
-      return tx.toExtended("hex");
-    }
-
     return tx;
+  
   }
 
   async buildMultiTx() {
@@ -166,8 +163,13 @@ class TestArc {
     const allTxs = [];
     for (let i = 0; i < numOfTx; i++) {
       const utxo = this.utxos.shift();
-      const tx = await this.buildTx(this.address, extended, utxo);
-      allTxs.push(tx);
+      const tx = await this.buildTx(this.address, utxo);
+      if (extended) {
+        allTxs.push(tx.toExtended("hex"));
+        continue;
+      }
+
+      allTxs.push(tx.toString("hex"));
     }
     return allTxs;
   }
@@ -199,14 +201,20 @@ const submit1Tx = async () => {
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
   const utxo = test.utxos.shift();
-  const tx = await test.buildTx(test.address, extended, utxo);
+  const tx = await test.buildTx(test.address, utxo);
+  let rawTx;
+  if (extended) {
+    rawTx = tx.toExtended("hex");
+  } else {
+    rawTx = tx.toString("hex");
+  }
 
   if (print) {
-    console.log(tx.toString());
+    console.log(rawTx);
     return;
   }
   try {
-    const txRes = await arcClient.postTransaction(tx);
+    const txRes = await arcClient.postTransaction(rawTx);
     console.log("Transaction Response: ", txRes);
   } catch (err) {
     console.log("error: ", err);
