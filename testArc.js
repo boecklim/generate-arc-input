@@ -150,7 +150,34 @@ class TestArc {
     tx.sign(this.privateKey);
 
     return tx;
-  
+  }
+
+  async buildChainedTx() {
+    let utxo = this.utxos.shift();
+    if (utxo === undefined) {
+      throw new Error("address ", address, " has no utxos to spend");
+    }
+
+    const numOfTx = 10;
+    const allTxs = [];
+    for (let i = 0; i < numOfTx; i++) {
+      const tx = await this.buildTx(this.address, utxo);
+
+      utxo = {
+        txid: tx.id,
+        vout: 0,
+        satoshis: utxo.satoshis - 1,
+        script: this.p2pkhOut,
+      };
+      if (extended) {
+        allTxs.push(tx.toExtended("hex"));
+        continue;
+      }
+
+      allTxs.push(tx.toString("hex"));
+    }
+
+    return allTxs;
   }
 
   async buildMultiTx() {
@@ -250,6 +277,30 @@ const submit2ConflictingTx = async () => {
 
   try {
     const txRes = await arcClient2.postTransaction(tx2);
+    console.log("Transaction Response: ", txRes);
+  } catch (err) {
+    console.log("error: ", err);
+  }
+};
+
+const submitChainedTx = async () => {
+  const test = new TestArc();
+  test.utxos = await test.getAddressUtxosWoC();
+  const txs = await test.buildChainedTx();
+  const arcClient = new ArcClient(arcURL);
+  arcClient.setAuthorization(apikey);
+
+  if (print) {
+    txsJson = txs.map((tx) => {
+      return { rawTx: tx };
+    });
+    var dictstring = JSON.stringify(txsJson);
+    console.log(dictstring);
+    return;
+  }
+
+  try {
+    const txRes = await arcClient.postTransactions(txs);
     console.log("Transaction Response: ", txRes);
   } catch (err) {
     console.log("error: ", err);
@@ -437,6 +488,9 @@ switch (command) {
     break;
   case "submitMultipleTx":
     submitMultipleTx();
+    break;
+  case "submitChainedTx":
+    submitChainedTx();
     break;
   case "submit2ConflictingTx":
     submit2ConflictingTx();
