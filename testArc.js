@@ -139,8 +139,7 @@ class TestArc {
     return [tx1, tx2];
   }
 
-  async buildTx(address, ext) {
-    const utxo = this.utxos.shift();
+  async buildTx(address, ext, utxo) {
     const tx = bsv.Transaction();
     if (utxo === undefined) {
       throw new Error("address ", address, " has no utxos to spend");
@@ -166,7 +165,8 @@ class TestArc {
     }
     const allTxs = [];
     for (let i = 0; i < numOfTx; i++) {
-      const tx = await this.buildTx(this.address, extended);
+      const utxo = this.utxos.shift();
+      const tx = await this.buildTx(this.address, extended, utxo);
       allTxs.push(tx);
     }
     return allTxs;
@@ -198,8 +198,8 @@ const submit1Tx = async () => {
   test.utxos = await test.getAddressUtxosWoC();
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
-
-  const tx = await test.buildTx(test.address, extended);
+  const utxo = test.utxos.shift();
+  const tx = await test.buildTx(test.address, extended, utxo);
 
   if (print) {
     console.log(tx.toString());
