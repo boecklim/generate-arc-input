@@ -139,17 +139,50 @@ class TestArc {
     return [tx1, tx2];
   }
 
-  async buildTx(address, utxo) {
+  async buildTx(address, utxo, fee) {
     const tx = bsv.Transaction();
     if (utxo === undefined) {
       throw new Error("address ", address, " has no utxos to spend");
     }
 
     tx.from(utxo);
-    tx.to(address, utxo.satoshis - 1); // leave 1 sat for fees - 1 input 1 output
+    tx.to(address, utxo.satoshis - fee); // leave 1 sat for fees - 1 input 1 output
     tx.sign(this.privateKey);
 
     return tx;
+  }
+
+  async buildChainedTxCpp() {
+    let utxo = this.utxos.shift();
+    if (utxo === undefined) {
+      throw new Error("address ", address, " has no utxos to spend");
+    }
+
+    const numOfTx = 3;
+    const allTxs = [];
+    for (let i = 0; i < numOfTx; i++) {
+      let fee = 0;
+      if (i == numOfTx - 1) {
+        fee = 3;
+      }
+
+      const tx = await this.buildTx(this.address, utxo, fee);
+
+      utxo = {
+        txid: tx.id,
+        vout: 0,
+        satoshis: utxo.satoshis - fee,
+        script: this.p2pkhOut,
+      };
+      if (extended) {
+        allTxs.push(tx.toExtended("hex"));
+        continue;
+      }
+
+      allTxs.push(tx.toString("hex"));
+    }
+
+    return allTxs;
   }
 
   async buildChainedTx() {
@@ -161,12 +194,14 @@ class TestArc {
     const numOfTx = 10;
     const allTxs = [];
     for (let i = 0; i < numOfTx; i++) {
-      const tx = await this.buildTx(this.address, utxo);
+      const fee = 1;
+
+      const tx = await this.buildTx(this.address, utxo, fee);
 
       utxo = {
         txid: tx.id,
         vout: 0,
-        satoshis: utxo.satoshis - 1,
+        satoshis: utxo.satoshis - fee,
         script: this.p2pkhOut,
       };
       if (extended) {
@@ -190,7 +225,7 @@ class TestArc {
     const allTxs = [];
     for (let i = 0; i < numOfTx; i++) {
       const utxo = this.utxos.shift();
-      const tx = await this.buildTx(this.address, utxo);
+      const tx = await this.buildTx(this.address, utxo, 1);
       if (extended) {
         allTxs.push(tx.toExtended("hex"));
         continue;
@@ -228,7 +263,7 @@ const submit1Tx = async () => {
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
   const utxo = test.utxos.shift();
-  const tx = await test.buildTx(test.address, utxo);
+  const tx = await test.buildTx(test.address, utxo, 1);
   let rawTx;
   if (extended) {
     rawTx = tx.toExtended("hex");
@@ -287,6 +322,30 @@ const submitChainedTx = async () => {
   const test = new TestArc();
   test.utxos = await test.getAddressUtxosWoC();
   const txs = await test.buildChainedTx();
+  const arcClient = new ArcClient(arcURL);
+  arcClient.setAuthorization(apikey);
+
+  if (print) {
+    txsJson = txs.map((tx) => {
+      return { rawTx: tx };
+    });
+    var dictstring = JSON.stringify(txsJson);
+    console.log(dictstring);
+    return;
+  }
+
+  try {
+    const txRes = await arcClient.postTransactions(txs);
+    console.log("Transaction Response: ", txRes);
+  } catch (err) {
+    console.log("error: ", err);
+  }
+};
+
+const submitChainedTxCpp = async () => {
+  const test = new TestArc();
+  test.utxos = await test.getAddressUtxosWoC();
+  const txs = await test.buildChainedTxCpp();
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
 
@@ -492,6 +551,9 @@ switch (command) {
   case "submitChainedTx":
     submitChainedTx();
     break;
+  case "submitChainedTxCpp":
+    submitChainedTxCpp();
+    break;
   case "submit2ConflictingTx":
     submit2ConflictingTx();
     break;
@@ -516,7 +578,10 @@ switch (command) {
   case "getAddressBalanceWoC":
     getAddressBalanceWoC();
     break;
-
+  case "toWif":
+    const test = new TestArc();
+    console.log(test.privateKey.toWIF());
+    break;
   default:
     console.log("error: {} not a valid command", command);
     break;
