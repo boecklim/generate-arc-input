@@ -4,9 +4,9 @@ require("bitcoin-ef/bsv");
 require("dotenv").config();
 const ArcClient = require("@bitcoin-a/arc-client").ArcClient;
 
-const arcURLTestnet = "https://arc-test.taal.com";
-const arcURLMainnet = "https://arc.taal.com";
-const arcURLMainnetGP = "https://arc.gorillapool.io";
+const arcURLTestnet = process.env.TESTNET_URL;
+const arcURLMainnet = process.env.MAINNET_URL;
+const arcURLMainnet2 = process.env.MAINNET_URL_2;
 const apikeyTestnet = process.env.APIKEY_TESTNET;
 const apikeyMainnet = process.env.APIKEY_MAINNET;
 const privkey = process.env.PRIV_KEY;
@@ -523,7 +523,7 @@ for (let index = 0; index < process.argv.length; index++) {
       wocURL = wocURLMainnet;
       apikey = apikeyMainnet;
       arcURL = arcURLMainnet;
-      arcURL2 = arcURLMainnetGP;
+      arcURL2 = arcURLMainnet2;
       network = "mainnet";
       break;
 
