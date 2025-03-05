@@ -81,3 +81,11 @@ Print the address of the private key
 ```
 node testArc.js printAddress
 ```
+
+# Submission script
+
+## How to use
+
+```
+./submit.sh <mainnet or testnet: main|test> <endpoint URL> <callback URL> <full status updates: true | false> <Authorization header>
+```
