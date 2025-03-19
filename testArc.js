@@ -257,7 +257,7 @@ const splitUtxo = async () => {
 };
 
 // run 1 single test
-const submit1Tx = async () => {
+const submitTx = async () => {
   const test = new TestArc();
   test.utxos = await test.getAddressUtxosWoC();
   const arcClient = new ArcClient(arcURL);
@@ -369,7 +369,7 @@ const submitChainedTxCpp = async () => {
 };
 
 // run multi broadcast test
-const submitMultipleTx = async () => {
+const submitTxs = async () => {
   const test = new TestArc();
   test.utxos = await test.getAddressUtxosWoC();
   const txs = await test.buildMultiTx();
@@ -544,11 +544,11 @@ for (let index = 0; index < process.argv.length; index++) {
 const command = process.argv[process.argv.length - 1];
 
 switch (command) {
-  case "submit1Tx":
-    submit1Tx();
+  case "submitTx":
+    submitTx();
     break;
-  case "submitMultipleTx":
-    submitMultipleTx();
+  case "submitTxs":
+    submitTxs();
     break;
   case "submitChainedTx":
     submitChainedTx();

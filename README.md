@@ -23,8 +23,8 @@ Copy the private key and paste it in the `.env` file as `PRIV_KEY='XXXXX'`.
 
 The following commands are available
 ```
-submit1Tx
-submitMultipleTx
+submitTx
+submitTxs
 splitUtxo
 
 printNewPrivateKey
@@ -42,7 +42,7 @@ By default each command is for `testnet`. Add the `--main` flag to run the comma
 Creates and sends one transaction to ARC
 
 ```
-node testArc.js submit1Tx
+node testArc.js submitTx
 ```
 
 With flag `--print` the transaction is merely printed.
@@ -52,7 +52,7 @@ With flag `--extended` the transaction is created in extended format.
 Creates and sends 10 transactions to ARC
 
 ```
-node testArc.js submitMultipleTx
+node testArc.js submitTxs
 ```
 
 In order to have at least 10 spendable outputs, you can split one UTXO into 10 smaller outputs using the command:

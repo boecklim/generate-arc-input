@@ -1,6 +1,6 @@
 #!/bin/bash
 
-hexString=$(node testArc.js --extended --print --$1 submit1Tx)
+hexString=$(node testArc.js --extended --print --$1 submitTx)
 
 curl --location 'https://'$2'/v1/tx' \
 --header 'X-CallbackUrl: '$3'' \
