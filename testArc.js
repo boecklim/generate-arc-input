@@ -2,7 +2,7 @@ const bsv = require("bsv");
 const axios = require("axios");
 require("bitcoin-ef/bsv");
 require("dotenv").config();
-const ArcClient = require("@bitcoin-a/arc-client").ArcClient;
+const ArcClient = require("@bitcoin-a/arc-client").ArcClient; // Todo: Use ts-sdk
 
 const arcURLTestnet = process.env.TESTNET_URL;
 const arcURLMainnet = process.env.MAINNET_URL;
@@ -262,7 +262,9 @@ const submit1Tx = async () => {
   test.utxos = await test.getAddressUtxosWoC();
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
-  const utxo = test.utxos.shift();
+
+  const randomItem = Math.floor(Math.random() * test.utxos.length);
+  const utxo = test.utxos[randomItem];
   const tx = await test.buildTx(test.address, utxo, 1);
   let rawTx;
   if (extended) {
