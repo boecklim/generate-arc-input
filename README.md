@@ -87,5 +87,5 @@ node testArc.js printAddress
 ## How to use
 
 ```
-./submit.sh <mainnet or testnet: main|test> <endpoint URL> <callback URL> <full status updates: true | false> <Authorization header>
+./submit.sh <mainnet or testnet: main|test> <endpoint URL> <callback URL> <callback token> <full status updates: true | false> <Authorization header>
 ```
