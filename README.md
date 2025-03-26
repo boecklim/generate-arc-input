@@ -5,87 +5,55 @@
 # How to install
 Run 
 ```
-yarn install
+npm install
 ```
 
-The following environment variables are required: `APIKEY_TESTNET`, `APIKEY_MAINNET`, `PRIV_KEY`. The private key should be holding some funds.
+The following environment variables are required: `PRIV_KEY`. The private key should be holding some funds.
 You can put them in a `.env` file in the root directory of the project.
 
 If you have no private key ready, you can generate one with the following command to display a new random private key with `testnet` and `mainnet` addresses:
 
-```
-node testArc.js printNewPrivateKey
+```bash
+npm exec ts-node -- src/main.ts printNewPrivateKey
 ```
 
 Copy the private key and paste it in the `.env` file as `PRIV_KEY='XXXXX'`.
 
 # How to run
 
+To print all available commands and flags run:
+```bash
+npm exec ts-node -- src/main.t help
+``` 
+
 The following commands are available
-```
+- submitTx
+- printNewPrivateKey
+- printAddress
+- help
+
+Temporarily not supported anymore:
+- ~~submitTxs~~
+- ~~splitUtxo~~
+- ~~getAddressUtxos~~
+- ~~getTxStatus~~
+- ~~getTxStatusHistory~~
+- ~~getAddressBalanceWoC~~
+
+## Examples
+
+Submit 1 transaction with callback URL and api key:
+```bash
+npm exec ts-node -- src/main.ts \
+--apiKey=mainnet_XXX \
+--arcURL=https://arc.taal.com \
+--callbackURL=https://abc-callbacks.com \
+-f \
+-m \
 submitTx
-submitTxs
-splitUtxo
-
-printNewPrivateKey
-printAddress
-
-getAddressUtxos
-getTxStatus
-getTxStatusHistory
-getAddressBalanceWoC
 ```
 
-By default each command is for `testnet`. Add the `--main` flag to run the commands for `mainnet`.
-
-## submit 1 tx
-Creates and sends one transaction to ARC
-
-```
-node testArc.js submitTx
-```
-
-With flag `--print` the transaction is merely printed.
-With flag `--extended` the transaction is created in extended format.
-
-## submit multiple txs
-Creates and sends 10 transactions to ARC
-
-```
-node testArc.js submitTxs
-```
-
-In order to have at least 10 spendable outputs, you can split one UTXO into 10 smaller outputs using the command:
-```
-node testArc.js splitUtxo
-```
-
-With flag `--print` the transactions are merely printed.
-With flag `--extended` the transactions are created in extended format.
-
-## submit 2 conflicting txs
-Creates and sends 2 conflicting transactions to ARC
-
-```
-node testArc.js submit2ConflictingTx
-```
-
-With flag `--print` the transactions are merely printed.
-With flag `--extended` the transactions are created in extended format.
-
-If the command is not printed and flag `--main` is given, then the second transaction will be sent to Gorilla Pool's ARC instance.
-
-## print address
-
-Print the address of the private key
-```
-node testArc.js printAddress
-```
-
-# Submission script
-
-## How to use
-
-```
-./submit.sh <mainnet or testnet: main|test> <endpoint URL> <callback URL> <callback token> <full status updates: true | false> <Authorization header>
+Print 1 transaction in extended format
+```bash
+npm exec ts-node -- src/main.ts -p -e submitTx
 ```
