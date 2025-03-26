@@ -1,279 +1,47 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submitMultipleTx mainnet print extended",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "--print",
-                "--extended",
-                "submitMultipleTx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submitMultipleTx testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "submitMultipleTx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit1Tx print extended mainnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "--extended",
-                "--print",
-                "submit1Tx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit1Tx extended mainnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "--extended",
-                "submit1Tx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit1Tx testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "submit1Tx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit1Tx print testnet extended",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--print",
-                "--extended",
-                "submit1Tx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit1Tx print testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--print",
-                "submit1Tx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submit2ConflictingTx print testnet extended",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--print",
-                "--extended",
-                "submit2ConflictingTx"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "printAddress testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "printAddress"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "printAddress",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "printAddress"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getTxStatus",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "getTxStatus"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "splitUtxo",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "splitUtxo"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "splitUtxo testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "splitUtxo"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getAddressUtxos",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "getAddressUtxos"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getAddressUtxos testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "getAddressUtxos"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getAddressBalanceWoC testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "getAddressBalanceWoC"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getAddressBalanceWoC",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "getAddressBalanceWoC"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getTxStatusHistory",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "getTxStatusHistory"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "none",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "getTxStatusHistory testnet",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "getTxStatusHistory" 
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "submitChainedTx mainnet print extended",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/testArc.js",
-            "args": [
-                "--main",
-                "--print",
-                "--extended",
-                "submitChainedTx"
-            ]
-        }
-    ]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "printAddress",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/testArc.ts", "printAddress"],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "printAddress mainnet",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/testArc.ts", "--main", "printAddress" ],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "submitTx",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/testArc.ts", "submitTx" ],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    }
+  ]
 }

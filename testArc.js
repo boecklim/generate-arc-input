@@ -152,18 +152,19 @@ class TestArc {
     return tx;
   }
 
+  // Build chain of 30 txs where the first tx does not pay any fees
   async buildChainedTxCpp() {
     let utxo = this.utxos.shift();
     if (utxo === undefined) {
       throw new Error("address ", address, " has no utxos to spend");
     }
 
-    const numOfTx = 3;
+    const numOfTx = 15;
     const allTxs = [];
     for (let i = 0; i < numOfTx; i++) {
       let fee = 0;
       if (i == numOfTx - 1) {
-        fee = 3;
+        fee = 5;
       }
 
       const tx = await this.buildTx(this.address, utxo, fee);
@@ -211,6 +212,32 @@ class TestArc {
 
       allTxs.push(tx.toString("hex"));
     }
+
+    return allTxs;
+  }
+
+  async buildChainedTxCpp1() {
+    // let utxo = this.utxos.shift();
+    // if (utxo === undefined) {
+    //   throw new Error("address ", address, " has no utxos to spend");
+    // }
+    let fee = 5;
+    const allTxs = [];
+    let utxo = {
+      txid: "07489a2251ae93e6cfb4872be0b34dc514b6b25e2c799df011e0c8f445db5fe9",
+      vout: 0,
+      satoshis: 99972,
+      script: this.p2pkhOut,
+    };
+
+    const tx = await this.buildTx(this.address, utxo, fee);
+
+    if (extended) {
+      allTxs.push(tx.toExtended("hex"));
+      return allTxs
+    }
+
+    allTxs.push(tx.toString("hex"));
 
     return allTxs;
   }
@@ -348,6 +375,30 @@ const submitChainedTxCpp = async () => {
   const test = new TestArc();
   test.utxos = await test.getAddressUtxosWoC();
   const txs = await test.buildChainedTxCpp();
+  const arcClient = new ArcClient(arcURL);
+  arcClient.setAuthorization(apikey);
+
+  if (print) {
+    txsJson = txs.map((tx) => {
+      return { rawTx: tx };
+    });
+    var dictstring = JSON.stringify(txsJson);
+    console.log(dictstring);
+    return;
+  }
+
+  try {
+    const txRes = await arcClient.postTransactions(txs);
+    console.log("Transaction Response: ", txRes);
+  } catch (err) {
+    console.log("error: ", err);
+  }
+};
+
+const submitChainedTxCpp1 = async () => {
+  const test = new TestArc();
+  test.utxos = await test.getAddressUtxosWoC();
+  const txs = await test.buildChainedTxCpp1();
   const arcClient = new ArcClient(arcURL);
   arcClient.setAuthorization(apikey);
 
@@ -555,6 +606,9 @@ switch (command) {
     break;
   case "submitChainedTxCpp":
     submitChainedTxCpp();
+    break;
+  case "submitChainedTxCpp1":
+    submitChainedTxCpp1();
     break;
   case "submit2ConflictingTx":
     submit2ConflictingTx();
