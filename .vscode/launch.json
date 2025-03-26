@@ -11,7 +11,7 @@
       "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/testArc.ts", "printAddress"],
+      "args": ["src/main.ts", "printAddress"],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
@@ -24,7 +24,7 @@
       "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/testArc.ts", "--main", "printAddress" ],
+      "args": ["src/main.ts", "--main", "printAddress" ],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
@@ -37,7 +37,7 @@
       "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/testArc.ts", "submitTx" ],
+      "args": ["src/main.ts", "submitTx" ],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
