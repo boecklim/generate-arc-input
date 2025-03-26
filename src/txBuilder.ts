@@ -111,6 +111,3 @@ export class TxBuilder {
     return tx;
   }
 }
-
-
-module.exports = TxBuilder;
