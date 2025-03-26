@@ -1,25 +1,31 @@
-import { PrivateKey, PublicKey, P2PKH, Transaction, ARC } from "@bsv/sdk";
+import {
+  PrivateKey,
+  PublicKey,
+  P2PKH,
+  Transaction,
+  ARC,
+  ArcConfig,
+} from "@bsv/sdk";
 import axios, { AxiosResponse } from "axios";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const arcURLTestnet = process.env.TESTNET_URL;
-const arcURLMainnet = process.env.MAINNET_URL;
-// const arcURLMainnet2 = process.env.MAINNET_URL_2;
-const apikeyTestnet = process.env.APIKEY_TESTNET;
-const apikeyMainnet = process.env.APIKEY_MAINNET;
 const privkey = process.env.PRIV_KEY;
 const wocURLTestnet = "https://api.whatsonchain.com/v1/bsv/test";
 const wocURLMainnet = "https://api.whatsonchain.com/v1/bsv/main";
 
 var wocURL = wocURLTestnet;
-var apikey = apikeyTestnet;
-var arcURL = arcURLTestnet;
+
+let apiKey: string;
+let arcURL: string;
+let callbackURL: string;
+let callbackToken: string;
 
 var network = "testnet";
-var print = false;
-var extended = false;
+let print: boolean = false;
+let extended: boolean = false;
+let fullStatusUpdates: boolean = false;
 
 type formatedUtxo = {
   txid: string;
@@ -52,32 +58,37 @@ class TestArc {
     });
   }
 
+  async getRawTxData(txID: string): Promise<AxiosResponse> {
+    return await axios({
+      method: "get",
+      url: `${wocURL}/tx/${txID}/hex`,
+    });
+  }
+
   async printAddress() {
     console.log(this.address);
   }
 
-  getAddressUtxosWoC(): formatedUtxo[] {
+  async getAddressUtxosWoC(): Promise<formatedUtxo[]> {
     let utxos: wocUtxo[];
 
-    axios
-      .get(`${wocURL}/address/${this.address}/unspent`)
-      .then((response: AxiosResponse<wocUtxo[]>) => {
-        utxos = response.data;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const resp = await this.getAddressUnspentUtxosWoC(this.address);
 
-    let formatedUtxos: formatedUtxo[];
+    utxos = resp.data;
+
+    let formatedUtxos: formatedUtxo[] = [];
+    let formatedUtxo: formatedUtxo;
     for (const utxo of utxos) {
       if (utxo.value <= 1) {
         continue;
       }
-      let formatedUtxo: formatedUtxo = {
+
+      formatedUtxo = {
         txid: utxo.tx_hash,
         vout: utxo.tx_pos,
         satoshis: utxo.value,
       };
+
       formatedUtxos.push(formatedUtxo);
     }
     return formatedUtxos;
@@ -86,19 +97,29 @@ class TestArc {
   async buildTx(utxo: formatedUtxo, fee: number): Promise<Transaction> {
     const version = 1;
 
+    let rawTxHex: string;
+
+    const resp = await this.getRawTxData(utxo.txid);
+
+    rawTxHex = resp.data;
+
     const tx = new Transaction();
 
+    const sourceTx = Transaction.fromHex(rawTxHex);
+
+    const p2pkh = new P2PKH().unlock(this.privateKey);
+
     tx.addInput({
-      sourceTransaction: Transaction.fromHex(utxo.txid),
+      sourceTransaction: sourceTx,
       sourceOutputIndex: utxo.vout,
-      unlockingScriptTemplate: new P2PKH().unlock(this.privateKey),
+      unlockingScriptTemplate: p2pkh,
       sequence: 0,
     });
 
     tx.addOutput({
       lockingScript: new P2PKH().lock(this.privateKey.toAddress()),
       change: true,
-      satoshis: utxo.satoshis - fee,
+      satoshis: utxo.satoshis,
     });
 
     await tx.fee();
@@ -107,10 +128,14 @@ class TestArc {
   }
 }
 
-// run 1 single test
+// submit a single tx which paying pack to same address
 const submitTx = async () => {
+  if (arcURL == "") {
+    throw new EvalError("arc URL not given");
+  }
+
   const test = new TestArc();
-  let utxos = test.getAddressUtxosWoC();
+  let utxos = await test.getAddressUtxosWoC();
 
   const randomItem = Math.floor(Math.random() * utxos.length);
   const utxo = utxos[randomItem];
@@ -128,9 +153,47 @@ const submitTx = async () => {
     }
     return;
   }
+
+  let cfg: ArcConfig = {};
+
+  if (apiKey != "") {
+
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "Authorization": apiKey,
+      };
+    } else {
+      cfg.headers["Authorization"] = apiKey;
+    }
+  }
+
+  if (callbackURL != "") {
+    cfg.callbackUrl = callbackURL;
+  }
+
+  if (callbackToken != "") {
+    cfg.callbackToken = callbackToken;
+  }
+
+  if (fullStatusUpdates) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-FullStatusUpdates": "true",
+      };
+    } else {
+      cfg.headers["X-FullStatusUpdates"] = "true";
+    }
+  }
+
+  const arc: ARC = new ARC(arcURL, cfg);
+
+  console.log(
+    `submitting tx: api key: ${apiKey}, arc URL: ${arcURL}, callback URL: ${callbackURL}, callback token: ${callbackToken}`
+  );
+
   try {
-    const txRes = await tx.broadcast(new ARC(arcURL, apikey));
-    console.log("Transaction Response: ", txRes);
+    const txRes = await tx.broadcast(arc);
+    console.log(txRes);
   } catch (err) {
     console.log("error: ", err);
   }
@@ -147,20 +210,67 @@ for (let index = 0; index < process.argv.length; index++) {
   switch (element) {
     case "--main":
       wocURL = wocURLMainnet;
-      apikey = apikeyMainnet;
-      arcURL = arcURLMainnet;
+      network = "mainnet";
+      break;
+    case "-m":
+      wocURL = wocURLMainnet;
       network = "mainnet";
       break;
 
     case "--extended":
       extended = true;
       break;
+    case "-e":
+      extended = true;
+      break;
+
+    case "--fullStatusUpdates":
+      fullStatusUpdates = true;
+      break;
+    case "-f":
+      fullStatusUpdates = true;
+      break;
 
     case "--print":
       print = true;
       break;
+    case "-p":
+      print = true;
+      break;
     default:
       break;
+  }
+
+  if (element.startsWith("--arcURL")) {
+    const arcURLFlag = element.split("=");
+    if (arcURLFlag.length >= 2) {
+      arcURL = arcURLFlag[1];
+    }
+    continue;
+  }
+
+  if (element.startsWith("--apiKey")) {
+    const apiKeyFlag = element.split("=");
+    if (apiKeyFlag.length >= 2) {
+      apiKey = apiKeyFlag[1];
+    }
+    continue;
+  }
+
+  if (element.startsWith("--callbackURL")) {
+    const callbackURLFlag = element.split("=");
+    if (callbackURLFlag.length >= 2) {
+      callbackURL = callbackURLFlag[1];
+    }
+    continue;
+  }
+
+  if (element.startsWith("--callbackToken")) {
+    const callbackTokenFlag = element.split("=");
+    if (callbackTokenFlag.length >= 2) {
+      callbackToken = callbackTokenFlag[1];
+    }
+    continue;
   }
 }
 
