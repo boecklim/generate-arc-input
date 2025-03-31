@@ -45,7 +45,7 @@ const submitTx = async () => {
 
   let cfg: ArcConfig = {};
 
-  if (apiKey != "") {
+  if (apiKey !== undefined) {
     if (cfg.headers === undefined) {
       cfg.headers = {
         Authorization: apiKey,
@@ -55,11 +55,11 @@ const submitTx = async () => {
     }
   }
 
-  if (callbackURL != "") {
+  if (callbackURL !== undefined) {
     cfg.callbackUrl = callbackURL;
   }
 
-  if (callbackToken != "") {
+  if (callbackToken !== undefined) {
     cfg.callbackToken = callbackToken;
   }
 
