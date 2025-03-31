@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "printAddress",
+      "name": "printAddress testnet",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
@@ -31,13 +31,26 @@
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     {
-      "name": "submitTx",
+      "name": "submitTx mainnet",
       "type": "node",
       "request": "launch",
       "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
 
-      "args": ["src/main.ts", "submitTx" ],
+      "args": ["src/main.ts", "--arcURL=https://arc.taal.com", "-m", "submitTx" ],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "submitTx testnet",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/main.ts", "--arcURL=https://arc-test.taal.com", "submitTx" ],
 
       "cwd": "${workspaceRoot}",
       "internalConsoleOptions": "openOnSessionStart",
