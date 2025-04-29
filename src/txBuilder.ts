@@ -1,9 +1,4 @@
-import {
-  PrivateKey,
-  PublicKey,
-  P2PKH,
-  Transaction,
-} from "@bsv/sdk";
+import { PrivateKey, PublicKey, P2PKH, Transaction } from "@bsv/sdk";
 import axios, { AxiosResponse } from "axios";
 
 type formatedUtxo = {
@@ -23,13 +18,13 @@ export class TxBuilder {
   privateKey: PrivateKey;
   address: string;
   publicKey: PublicKey;
-  wocURL: string
+  wocURL: string;
 
   constructor(privkey: string, network: string, wocURL: string) {
     this.privateKey = PrivateKey.fromString(privkey);
     this.publicKey = this.privateKey.toPublicKey();
     this.address = this.privateKey.toAddress(network).toString();
-    this.wocURL = wocURL
+    this.wocURL = wocURL;
   }
 
   async getAddressUnspentUtxosWoC(address: string): Promise<AxiosResponse> {
@@ -75,12 +70,7 @@ export class TxBuilder {
     return formatedUtxos;
   }
 
-  async buildTx(): Promise<Transaction> {
-    let utxos = await this.getAddressUtxosWoC();
-  
-    const randomItem = Math.floor(Math.random() * utxos.length);
-    const utxo = utxos[randomItem];
-
+  async createTx(utxo: formatedUtxo): Promise<Transaction> {
     let rawTxHex: string;
 
     const resp = await this.getRawTxData(utxo.txid);
@@ -109,5 +99,38 @@ export class TxBuilder {
     await tx.fee();
     await tx.sign();
     return tx;
+  }
+
+  async buildTx(): Promise<Transaction> {
+    let utxos = await this.getAddressUtxosWoC();
+
+    const randomItem = Math.floor(Math.random() * utxos.length);
+    const utxo = utxos[randomItem];
+
+    let tx = await this.createTx(utxo);
+
+    return tx;
+  }
+
+  async buildTxs(): Promise<Transaction[]> {
+    let utxos = await this.getAddressUtxosWoC();
+
+    const txsCount = 10;
+
+    let index = Math.floor(Math.random() * utxos.length - txsCount);
+
+    let txs = [];
+
+    for (let i = 0; i < txsCount; i++) {
+      const utxo = utxos[index];
+
+      let tx = await this.createTx(utxo);
+
+      txs.push(tx);
+
+      index++;
+    }
+
+    return txs;
   }
 }

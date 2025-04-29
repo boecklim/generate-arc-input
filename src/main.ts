@@ -22,7 +22,7 @@ let fullStatusUpdates: boolean = false;
 
 // submit a single tx which is paying pack to same address
 const submitTx = async () => {
-  if (arcURL == "") {
+  if (arcURL === undefined && !print) {
     throw new EvalError("arc URL not given");
   }
 
@@ -83,6 +83,36 @@ const submitTx = async () => {
   }
 };
 
+// submit 10 txs which is paying pack to same address
+const submitTxs = async () => {
+  if (arcURL === undefined && !print) {
+    throw new EvalError("arc URL not given");
+  }
+
+  const test = new TxBuilder(privkey, network, wocURL);
+
+  const txs = await test.buildTxs();
+
+  if (extended) {
+    txs.forEach((element) => {
+      element.toEF();
+    });
+  }
+
+  if (print) {
+    let txsJson = txs.map((tx) => {
+      return { rawTx: tx.toHex() };
+    });
+
+    var dictstring = JSON.stringify(txsJson);
+    console.log(dictstring);
+    return;
+  }
+
+  // Todo: submit 10 txs
+  throw new Error("submitting multiple txs not implemented");
+};
+
 const printNewPrivateKey = async () => {
   const newPrivateKey = PrivateKey.fromRandom();
   console.log("new private key:\t", newPrivateKey.toString());
@@ -103,21 +133,31 @@ const printAddress = async () => {
 };
 
 const printHelp = async () => {
-    console.log('commands:')
-    console.log('\t submitTx:\t\t Submit 1 transaction to ARC')
-    console.log('\t printNewPrivateKey:\t Create and print a new random private key')
-    console.log('\t printAddress:\t\t Print the address of the given private key')
-    console.log('\t help:\t\t\t Print this help')
-    
-    console.log('flags:')
-    console.log('\t --main | -m:\t\t\t Use mainnet')
-    console.log('\t --extended | -e:\t\t Run command with extended format')
-    console.log('\t --fullStatusUpdates | -f:\t Run command with full status updates')
-    console.log('\t --print | -p:\t\t\t Do not submit any transactions but print them')
-    console.log('\t --arcURL=XXX:\t\t\t URL of ARC instance to be used')
-    console.log('\t --callbackURL=XXX:\t\t Callback URL to be used')
-    console.log('\t --callbackToken=XXX:\t\t Callback token to be used')
-    console.log('\t --apiKey=XXX:\t\t\t API key to be sent as Authorization header')
+  console.log("commands:");
+  console.log("\t submitTx:\t\t Submit 1 transaction to ARC");
+  console.log(
+    "\t printNewPrivateKey:\t Create and print a new random private key"
+  );
+  console.log(
+    "\t printAddress:\t\t Print the address of the given private key"
+  );
+  console.log("\t help:\t\t\t Print this help");
+
+  console.log("flags:");
+  console.log("\t --main | -m:\t\t\t Use mainnet");
+  console.log("\t --extended | -e:\t\t Run command with extended format");
+  console.log(
+    "\t --fullStatusUpdates | -f:\t Run command with full status updates"
+  );
+  console.log(
+    "\t --print | -p:\t\t\t Do not submit any transactions but print them"
+  );
+  console.log("\t --arcURL=XXX:\t\t\t URL of ARC instance to be used");
+  console.log("\t --callbackURL=XXX:\t\t Callback URL to be used");
+  console.log("\t --callbackToken=XXX:\t\t Callback token to be used");
+  console.log(
+    "\t --apiKey=XXX:\t\t\t API key to be sent as Authorization header"
+  );
 };
 
 for (let index = 0; index < process.argv.length; index++) {
@@ -194,6 +234,10 @@ const command = process.argv[process.argv.length - 1];
 switch (command) {
   case "submitTx":
     submitTx();
+    break;
+
+  case "submitTxs":
+    submitTxs();
     break;
 
   case "printNewPrivateKey":
