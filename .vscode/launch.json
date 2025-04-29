@@ -44,6 +44,32 @@
       "skipFiles": ["<node_internals>/**", "node_modules/**"]
     },
     {
+      "name": "submitTx mainnet print",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/main.ts", "-p", "-m", "submitTx" ],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
+      "name": "submitTxs mainnet",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "/Users/michaelbockli/.nvm/versions/node/v18.12.1/bin/node",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register/transpile-only"],
+
+      "args": ["src/main.ts", "-p", "-m", "submitTxs" ],
+
+      "cwd": "${workspaceRoot}",
+      "internalConsoleOptions": "openOnSessionStart",
+      "skipFiles": ["<node_internals>/**", "node_modules/**"]
+    },
+    {
       "name": "submitTx testnet",
       "type": "node",
       "request": "launch",
