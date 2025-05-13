@@ -70,7 +70,7 @@ export class TxBuilder {
     return formatedUtxos;
   }
 
-  async createTx(utxo: formatedUtxo): Promise<Transaction> {
+  async createTx1Output(utxo: formatedUtxo, changeAddress: string ): Promise<Transaction> {
     let rawTxHex: string;
 
     const resp = await this.getRawTxData(utxo.txid);
@@ -91,9 +91,46 @@ export class TxBuilder {
     });
 
     tx.addOutput({
-      lockingScript: new P2PKH().lock(this.privateKey.toAddress()),
+      lockingScript: new P2PKH().lock(changeAddress),
       change: true,
-      satoshis: utxo.satoshis,
+      // satoshis: utxo.satoshis,
+    });
+
+    await tx.fee();
+    await tx.sign();
+    return tx;
+  }
+
+  async createTx2Outputs(utxo: formatedUtxo, changeAddress: string,  address: string ): Promise<Transaction> {
+    let rawTxHex: string;
+
+    const resp = await this.getRawTxData(utxo.txid);
+
+    rawTxHex = resp.data;
+
+    const tx = new Transaction();
+
+    const sourceTx = Transaction.fromHex(rawTxHex);
+
+    const p2pkh = new P2PKH().unlock(this.privateKey);
+
+    tx.addInput({
+      sourceTransaction: sourceTx,
+      sourceOutputIndex: utxo.vout,
+      unlockingScriptTemplate: p2pkh,
+      sequence: 0,
+    });
+
+    tx.addOutput({
+      lockingScript: new P2PKH().lock(changeAddress),
+      change: true,
+      // satoshis: utxo.satoshis,
+    });
+
+    tx.addOutput({
+      lockingScript: new P2PKH().lock(address),
+      change: false,
+      satoshis: 1,
     });
 
     await tx.fee();
@@ -107,7 +144,7 @@ export class TxBuilder {
     const randomItem = Math.floor(Math.random() * utxos.length);
     const utxo = utxos[randomItem];
 
-    let tx = await this.createTx(utxo);
+    let tx = await this.createTx1Output(utxo, this.privateKey.toAddress());
 
     return tx;
   }
@@ -124,7 +161,7 @@ export class TxBuilder {
     for (let i = 0; i < txsCount; i++) {
       const utxo = utxos[index];
 
-      let tx = await this.createTx(utxo);
+      let tx = await this.createTx1Output(utxo, this.privateKey.toAddress());
 
       txs.push(tx);
 
@@ -132,5 +169,18 @@ export class TxBuilder {
     }
 
     return txs;
+  }
+
+  
+  async build2ConflictingTx(): Promise<Transaction[]> {
+    let utxos = await this.getAddressUtxosWoC();
+
+    const randomItem = Math.floor(Math.random() * utxos.length);
+    const utxo = utxos[randomItem];
+
+    let tx1 = await this.createTx2Outputs(utxo, this.privateKey.toAddress(), PrivateKey.fromRandom().toAddress());
+    let tx2 = await this.createTx2Outputs(utxo, this.privateKey.toAddress(), PrivateKey.fromRandom().toAddress());
+
+    return [tx1, tx2];
   }
 }

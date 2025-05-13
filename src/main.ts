@@ -113,6 +113,36 @@ const submitTxs = async () => {
   throw new Error("submitting multiple txs not implemented");
 };
 
+// submit 2 conflicting txs
+const submit2ConflictingTxs = async () => {
+  if (arcURL === undefined && !print) {
+    throw new EvalError("arc URL not given");
+  }
+
+  const test = new TxBuilder(privkey, network, wocURL);
+
+  const txs = await test.build2ConflictingTx();
+
+  if (extended) {
+    txs.forEach((element) => {
+      element.toEF();
+    });
+  }
+
+  if (print) {
+    let txsJson = txs.map((tx) => {
+      return { rawTx: tx.toHex() };
+    });
+
+    var dictstring = JSON.stringify(txsJson);
+    console.log(dictstring);
+    return;
+  }
+
+  // Todo: submit 10 txs
+  throw new Error("submitting multiple txs not implemented");
+};
+
 const printNewPrivateKey = async () => {
   const newPrivateKey = PrivateKey.fromRandom();
   console.log("new private key:\t", newPrivateKey.toString());
@@ -238,6 +268,10 @@ switch (command) {
 
   case "submitTxs":
     submitTxs();
+    break;
+
+  case "submit2ConflictingTxs":
+    submit2ConflictingTxs();
     break;
 
   case "printNewPrivateKey":
