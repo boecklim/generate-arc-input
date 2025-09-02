@@ -19,6 +19,7 @@ var network = "testnet";
 let print: boolean = false;
 let extended: boolean = false;
 let fullStatusUpdates: boolean = false;
+let allowBatch: boolean = false;
 
 // submit a single tx which is paying pack to same address
 const submitTx = async () => {
@@ -70,6 +71,16 @@ const submitTx = async () => {
       };
     } else {
       cfg.headers["X-FullStatusUpdates"] = "true";
+    }
+  }
+
+  if (allowBatch) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-CallbackBatch": "true",
+      };
+    } else {
+      cfg.headers["X-CallbackBatch"] = "true";
     }
   }
 
@@ -221,6 +232,13 @@ for (let index = 0; index < process.argv.length; index++) {
       break;
     case "-p":
       print = true;
+      break;
+
+    case "--batch-callback":
+      allowBatch = true;
+      break;
+    case "-b":
+      allowBatch = true;
       break;
     default:
       break;
