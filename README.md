@@ -2,9 +2,11 @@
 
 `generate-arc-input` is a script for the creation of transactions to test [ARC](https://github.com/bitcoin-sv/arc). It holds also some helper functions to get information about transactions.
 
-# How to install
-Run 
-```
+## How to install
+
+Run
+
+```bash
 npm install
 ```
 
@@ -19,20 +21,23 @@ npm exec ts-node -- src/main.ts printNewPrivateKey
 
 Copy the private key and paste it in the `.env` file as `PRIV_KEY='XXXXX'`.
 
-# How to run
+## How to run
 
 To print all available commands and flags run:
+
 ```bash
 npm exec ts-node -- src/main.t help
-``` 
+```
 
 The following commands are available
+
 - submitTx
 - printNewPrivateKey
 - printAddress
 - help
 
 Temporarily not supported anymore:
+
 - ~~submitTxs~~
 - ~~splitUtxo~~
 - ~~getAddressUtxos~~
@@ -43,6 +48,7 @@ Temporarily not supported anymore:
 ## Examples
 
 Submit 1 transaction with callback URL and api key:
+
 ```bash
 npm exec ts-node -- src/main.ts \
 --apiKey=mainnet_XXX \
@@ -54,6 +60,7 @@ submitTx
 ```
 
 Print 1 transaction in extended format
+
 ```bash
 npm exec ts-node -- src/main.ts -p -e submitTx
 ```
