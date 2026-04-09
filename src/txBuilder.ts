@@ -56,14 +56,14 @@ export class TxBuilder {
     let formatedUtxo: formatedUtxo;
     for (const utxo of utxos) {
       if (utxo.value > 1) {
-      formatedUtxo = {
-        txid: utxo.tx_hash,
-        vout: utxo.tx_pos,
-        satoshis: utxo.value,
-      };
+        formatedUtxo = {
+          txid: utxo.tx_hash,
+          vout: utxo.tx_pos,
+          satoshis: utxo.value,
+        };
 
-      formatedUtxos.push(formatedUtxo);
-    }
+        formatedUtxos.push(formatedUtxo);
+      }
     }
 
     return formatedUtxos;
@@ -100,7 +100,7 @@ export class TxBuilder {
     return tx;
   }
 
-  async createTx2Outputs(utxo: formatedUtxo, changeAddress: string,  address: string ): Promise<Transaction> {
+  async createTx2Outputs(utxo: formatedUtxo, changeAddress: string, address: string): Promise<Transaction> {
     let rawTxHex: string;
 
     const resp = await this.getRawTxData(utxo.txid);
@@ -123,7 +123,6 @@ export class TxBuilder {
     tx.addOutput({
       lockingScript: new P2PKH().lock(changeAddress),
       change: true,
-      // satoshis: utxo.satoshis,
     });
 
     tx.addOutput({
@@ -148,6 +147,10 @@ export class TxBuilder {
     return tx;
   }
 
+  async sleep(ms: number): Promise<void> {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async buildTxs(): Promise<Transaction[]> {
     let utxos = await this.getAddressUtxosWoC();
 
@@ -165,12 +168,13 @@ export class TxBuilder {
       txs.push(tx);
 
       index++;
+
+      await this.sleep(2000);
     }
 
     return txs;
   }
 
-  
   async build2ConflictingTx(): Promise<Transaction[]> {
     let utxos = await this.getAddressUtxosWoC();
 
