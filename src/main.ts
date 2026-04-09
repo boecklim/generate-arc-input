@@ -4,7 +4,6 @@ import { TxBuilder } from "./txBuilder";
 
 dotenv.config();
 
-const privkey = process.env.PRIV_KEY;
 const wocURLTestnet = "https://api.whatsonchain.com/v1/bsv/test";
 const wocURLMainnet = "https://api.whatsonchain.com/v1/bsv/main";
 
@@ -15,6 +14,7 @@ let arcURL: string;
 let callbackURL: string;
 let callbackToken: string;
 let waitFor: string;
+const privkey: string = process.env.PRIV_KEY || ""
 
 var network = "testnet";
 let print: boolean = false;
