@@ -87,7 +87,7 @@ const submitTx = async () => {
   const arc: ARC = new ARC(arcURL, cfg);
 
   try {
-    const txRes = await tx.broadcast(arc);
+    const txRes = await arc.broadcast(tx)
     console.log(txRes);
   } catch (err) {
     console.log("error: ", err);
@@ -127,8 +127,54 @@ const submitTxs = async () => {
     return;
   }
 
-  // Todo: submit 10 txs
-  throw new Error("submitting multiple txs not implemented");
+  let cfg: ArcConfig = {};
+
+  if (apiKey !== undefined) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        Authorization: apiKey,
+      };
+    } else {
+      cfg.headers["Authorization"] = apiKey;
+    }
+  }
+
+  if (callbackURL !== undefined) {
+    cfg.callbackUrl = callbackURL;
+  }
+
+  if (callbackToken !== undefined) {
+    cfg.callbackToken = callbackToken;
+  }
+
+  if (fullStatusUpdates) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-FullStatusUpdates": "true",
+      };
+    } else {
+      cfg.headers["X-FullStatusUpdates"] = "true";
+    }
+  }
+
+  if (allowBatch) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-CallbackBatch": "true",
+      };
+    } else {
+      cfg.headers["X-CallbackBatch"] = "true";
+    }
+  }
+
+  const arc: ARC = new ARC(arcURL, cfg);
+
+  try {
+    const txRes = await arc.broadcastMany(txs);
+    console.log(txRes);
+  } catch (err) {
+    console.log("error: ", err);
+  }
 };
 
 // submit 2 conflicting txs
@@ -157,8 +203,54 @@ const submit2ConflictingTxs = async () => {
     return;
   }
 
-  // Todo: submit 10 txs
-  throw new Error("submitting multiple txs not implemented");
+  let cfg: ArcConfig = {};
+
+  if (apiKey !== undefined) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        Authorization: apiKey,
+      };
+    } else {
+      cfg.headers["Authorization"] = apiKey;
+    }
+  }
+
+  if (callbackURL !== undefined) {
+    cfg.callbackUrl = callbackURL;
+  }
+
+  if (callbackToken !== undefined) {
+    cfg.callbackToken = callbackToken;
+  }
+
+  if (fullStatusUpdates) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-FullStatusUpdates": "true",
+      };
+    } else {
+      cfg.headers["X-FullStatusUpdates"] = "true";
+    }
+  }
+
+  if (allowBatch) {
+    if (cfg.headers === undefined) {
+      cfg.headers = {
+        "X-CallbackBatch": "true",
+      };
+    } else {
+      cfg.headers["X-CallbackBatch"] = "true";
+    }
+  }
+
+  const arc: ARC = new ARC(arcURL, cfg);
+
+  try {
+    const txRes = await arc.broadcastMany(txs);
+    console.log(txRes);
+  } catch (err) {
+    console.log("error: ", err);
+  }
 };
 
 const printNewPrivateKey = async () => {
