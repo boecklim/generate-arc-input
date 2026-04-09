@@ -14,6 +14,7 @@ let apiKey: string;
 let arcURL: string;
 let callbackURL: string;
 let callbackToken: string;
+let waitFor: string;
 
 var network = "testnet";
 let print: boolean = false;
@@ -35,6 +36,11 @@ const getArcConfig = (): ArcConfig => {
 
   if (callbackToken !== undefined) {
     cfg.callbackToken = callbackToken;
+  }
+
+  if (waitFor !== undefined) {
+    cfg.headers = cfg.headers ?? {};
+    cfg.headers["X-WaitFor"] = waitFor;
   }
 
   if (fullStatusUpdates) {
@@ -264,6 +270,14 @@ for (let index = 0; index < process.argv.length; index++) {
     const apiKeyFlag = element.split("=");
     if (apiKeyFlag.length >= 2) {
       apiKey = apiKeyFlag[1];
+    }
+    continue;
+  }
+
+  if (element.startsWith("--waitFor")) {
+    const waitForFlag = element.split("=");
+    if (waitForFlag.length >= 2) {
+      waitFor = waitForFlag[1];
     }
     continue;
   }
