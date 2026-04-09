@@ -190,29 +190,20 @@ const printAddress = async () => {
 const printHelp = async () => {
   console.log("commands:");
   console.log("\t submitTx:\t\t Submit 1 transaction to ARC");
-  console.log(
-    "\t printNewPrivateKey:\t Create and print a new random private key"
-  );
-  console.log(
-    "\t printAddress:\t\t Print the address of the given private key"
-  );
+  console.log("\t submitTxs:\t\t Submit 10 transactions to ARC");
+  console.log("\t printNewPrivateKey:\t Create and print a new random private key");
+  console.log("\t printAddress:\t\t Print the address of the given private key");
   console.log("\t help:\t\t\t Print this help");
-
   console.log("flags:");
   console.log("\t --main | -m:\t\t\t Use mainnet");
   console.log("\t --extended | -e:\t\t Run command with extended format");
-  console.log(
-    "\t --fullStatusUpdates | -f:\t Run command with full status updates"
-  );
-  console.log(
-    "\t --print | -p:\t\t\t Do not submit any transactions but print them"
-  );
+  console.log("\t --fullStatusUpdates | -f:\t Run command with full status updates");
+  console.log("\t --print | -p:\t\t\t Do not submit any transactions but print them");
   console.log("\t --arcURL=XXX:\t\t\t URL of ARC instance to be used");
   console.log("\t --callbackURL=XXX:\t\t Callback URL to be used");
   console.log("\t --callbackToken=XXX:\t\t Callback token to be used");
-  console.log(
-    "\t --apiKey=XXX:\t\t\t API key to be sent as Authorization header"
-  );
+  console.log("\t --waitFor=XXX:\t\t\t Transaction status to be waited For");
+  console.log("\t --apiKey=XXX:\t\t\t API key to be sent as Authorization header");
 };
 
 for (let index = 0; index < process.argv.length; index++) {
