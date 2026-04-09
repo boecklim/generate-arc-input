@@ -32,13 +32,13 @@ npm exec ts-node -- src/main.t help
 The following commands are available
 
 - submitTx
+- submitTxs
 - printNewPrivateKey
 - printAddress
 - help
 
 Temporarily not supported anymore:
 
-- ~~submitTxs~~
 - ~~splitUtxo~~
 - ~~getAddressUtxos~~
 - ~~getTxStatus~~
