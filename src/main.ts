@@ -111,9 +111,16 @@ const submitTxs = async () => {
   }
 
   if (print) {
-    let txsJson = txs.map((tx) => {
-      return { rawTx: tx.toHex() };
-    });
+    let txsJson
+    if (extended) {
+      txsJson = txs.map((tx) => {
+        return { rawTx: tx.toHexEF() };
+      });
+    } else {
+      txsJson = txs.map((tx) => {
+        return { rawTx: tx.toHex() };
+      });
+    }
 
     var dictstring = JSON.stringify(txsJson);
     console.log(dictstring);
