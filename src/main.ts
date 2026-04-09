@@ -21,6 +21,35 @@ let extended: boolean = false;
 let fullStatusUpdates: boolean = false;
 let allowBatch: boolean = false;
 
+const getArcConfig = (): ArcConfig => {
+  const cfg: ArcConfig = {};
+
+  if (apiKey !== undefined) {
+    cfg.headers = cfg.headers ?? {};
+    cfg.headers.Authorization = apiKey;
+  }
+
+  if (callbackURL !== undefined) {
+    cfg.callbackUrl = callbackURL;
+  }
+
+  if (callbackToken !== undefined) {
+    cfg.callbackToken = callbackToken;
+  }
+
+  if (fullStatusUpdates) {
+    cfg.headers = cfg.headers ?? {};
+    cfg.headers["X-FullStatusUpdates"] = "true";
+  }
+
+  if (allowBatch) {
+    cfg.headers = cfg.headers ?? {};
+    cfg.headers["X-CallbackBatch"] = "true";
+  }
+
+  return cfg;
+};
+
 // submit a single tx which is paying pack to same address
 const submitTx = async () => {
   if (arcURL === undefined && !print) {
@@ -44,50 +73,10 @@ const submitTx = async () => {
     return;
   }
 
-  let cfg: ArcConfig = {};
-
-  if (apiKey !== undefined) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        Authorization: apiKey,
-      };
-    } else {
-      cfg.headers["Authorization"] = apiKey;
-    }
-  }
-
-  if (callbackURL !== undefined) {
-    cfg.callbackUrl = callbackURL;
-  }
-
-  if (callbackToken !== undefined) {
-    cfg.callbackToken = callbackToken;
-  }
-
-  if (fullStatusUpdates) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-FullStatusUpdates": "true",
-      };
-    } else {
-      cfg.headers["X-FullStatusUpdates"] = "true";
-    }
-  }
-
-  if (allowBatch) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-CallbackBatch": "true",
-      };
-    } else {
-      cfg.headers["X-CallbackBatch"] = "true";
-    }
-  }
-
-  const arc: ARC = new ARC(arcURL, cfg);
+  const arc: ARC = new ARC(arcURL, getArcConfig());
 
   try {
-    const txRes = await arc.broadcast(tx)
+    const txRes = await arc.broadcast(tx);
     console.log(txRes);
   } catch (err) {
     console.log("error: ", err);
@@ -127,47 +116,7 @@ const submitTxs = async () => {
     return;
   }
 
-  let cfg: ArcConfig = {};
-
-  if (apiKey !== undefined) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        Authorization: apiKey,
-      };
-    } else {
-      cfg.headers["Authorization"] = apiKey;
-    }
-  }
-
-  if (callbackURL !== undefined) {
-    cfg.callbackUrl = callbackURL;
-  }
-
-  if (callbackToken !== undefined) {
-    cfg.callbackToken = callbackToken;
-  }
-
-  if (fullStatusUpdates) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-FullStatusUpdates": "true",
-      };
-    } else {
-      cfg.headers["X-FullStatusUpdates"] = "true";
-    }
-  }
-
-  if (allowBatch) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-CallbackBatch": "true",
-      };
-    } else {
-      cfg.headers["X-CallbackBatch"] = "true";
-    }
-  }
-
-  const arc: ARC = new ARC(arcURL, cfg);
+  const arc: ARC = new ARC(arcURL, getArcConfig());
 
   try {
     const txRes = await arc.broadcastMany(txs);
@@ -203,47 +152,7 @@ const submit2ConflictingTxs = async () => {
     return;
   }
 
-  let cfg: ArcConfig = {};
-
-  if (apiKey !== undefined) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        Authorization: apiKey,
-      };
-    } else {
-      cfg.headers["Authorization"] = apiKey;
-    }
-  }
-
-  if (callbackURL !== undefined) {
-    cfg.callbackUrl = callbackURL;
-  }
-
-  if (callbackToken !== undefined) {
-    cfg.callbackToken = callbackToken;
-  }
-
-  if (fullStatusUpdates) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-FullStatusUpdates": "true",
-      };
-    } else {
-      cfg.headers["X-FullStatusUpdates"] = "true";
-    }
-  }
-
-  if (allowBatch) {
-    if (cfg.headers === undefined) {
-      cfg.headers = {
-        "X-CallbackBatch": "true",
-      };
-    } else {
-      cfg.headers["X-CallbackBatch"] = "true";
-    }
-  }
-
-  const arc: ARC = new ARC(arcURL, cfg);
+  const arc: ARC = new ARC(arcURL, getArcConfig());
 
   try {
     const txRes = await arc.broadcastMany(txs);
