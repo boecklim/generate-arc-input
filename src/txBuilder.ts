@@ -30,7 +30,7 @@ export class TxBuilder {
   async getAddressUnspentUtxosWoC(address: string): Promise<AxiosResponse> {
     return await axios({
       method: "get",
-      url: `${this.wocURL}/address/${address}/unspent`,
+      url: `${this.wocURL}/address/${address}/unspent/all`,
     });
   }
 
@@ -50,15 +50,12 @@ export class TxBuilder {
 
     const resp = await this.getAddressUnspentUtxosWoC(this.address);
 
-    utxos = resp.data;
+    utxos = resp.data.result;
 
     let formatedUtxos: formatedUtxo[] = [];
     let formatedUtxo: formatedUtxo;
     for (const utxo of utxos) {
-      if (utxo.value <= 1) {
-        continue;
-      }
-
+      if (utxo.value > 1) {
       formatedUtxo = {
         txid: utxo.tx_hash,
         vout: utxo.tx_pos,
@@ -67,6 +64,8 @@ export class TxBuilder {
 
       formatedUtxos.push(formatedUtxo);
     }
+    }
+
     return formatedUtxos;
   }
 
