@@ -14,6 +14,7 @@ let arcURL: string;
 let callbackURL: string;
 let callbackToken: string;
 let waitFor: string;
+let maxTimeout: string;
 const privkey: string = process.env.PRIV_KEY || ""
 
 var network = "testnet";
@@ -41,6 +42,11 @@ const getArcConfig = (): ArcConfig => {
   if (waitFor !== undefined) {
     cfg.headers = cfg.headers ?? {};
     cfg.headers["X-WaitFor"] = waitFor;
+  }
+
+  if (maxTimeout !== undefined) {
+    cfg.headers = cfg.headers ?? {};
+    cfg.headers["X-MaxTimeout"] = maxTimeout;
   }
 
   if (fullStatusUpdates) {
@@ -204,6 +210,7 @@ const printHelp = async () => {
   console.log("\t --callbackToken=XXX:\t\t Callback token to be used");
   console.log("\t --waitFor=XXX:\t\t\t Transaction status to be waited For");
   console.log("\t --apiKey=XXX:\t\t\t API key to be sent as Authorization header");
+  console.log("\t --maxTimeout=XXX:\t\t\t Maximum time to wait to receive response in seconds");
 };
 
 for (let index = 0; index < process.argv.length; index++) {
@@ -261,6 +268,14 @@ for (let index = 0; index < process.argv.length; index++) {
     const apiKeyFlag = element.split("=");
     if (apiKeyFlag.length >= 2) {
       apiKey = apiKeyFlag[1];
+    }
+    continue;
+  }
+
+  if (element.startsWith("--maxTimeout")) {
+    const maxTimeoutFlag = element.split("=");
+    if (maxTimeoutFlag.length >= 2) {
+      maxTimeout = maxTimeoutFlag[1];
     }
     continue;
   }
