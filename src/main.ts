@@ -88,7 +88,11 @@ const submitTx = async () => {
   const arc: ARC = new ARC(arcURL, getArcConfig());
 
   try {
+    const startTime = Date.now();
     const txRes = await arc.broadcast(tx);
+    const elapsedMs = Date.now() - startTime;
+
+    console.log("broadcast took", elapsedMs, "ms");
     console.log(txRes);
   } catch (err) {
     console.log("error: ", err);
@@ -131,7 +135,11 @@ const submitTxs = async () => {
   const arc: ARC = new ARC(arcURL, getArcConfig());
 
   try {
+    const startTime = Date.now();
     const txRes = await arc.broadcastMany(txs);
+    const elapsedMs = Date.now() - startTime;
+
+    console.log("broadcastMany took", elapsedMs, "ms");
     console.log(txRes);
   } catch (err) {
     console.log("error: ", err);
