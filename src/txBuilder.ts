@@ -45,6 +45,14 @@ export class TxBuilder {
     console.log(this.address);
   }
 
+  async printPrivKeyWIF() {
+    console.log(this.privateKey.toWif());
+  }
+
+  async printPrivKeyHex() {
+    console.log(this.privateKey.toHex());
+  }
+
   async getAddressUtxosWoC(): Promise<formatedUtxo[]> {
     let utxos: wocUtxo[];
 

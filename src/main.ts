@@ -201,11 +201,25 @@ const printAddress = async () => {
   test.printAddress();
 };
 
+// print the private key as wif
+const printWIF = async () => {
+  const test = new TxBuilder(privkey, network, wocURL);
+  test.printPrivKeyWIF();
+};
+
+// print the private key as hex
+const printPrivKeyHex = async () => {
+  const test = new TxBuilder(privkey, network, wocURL);
+  test.printPrivKeyHex();
+};
+
 const printHelp = async () => {
   console.log("commands:");
   console.log("\t submitTx:\t\t Submit 1 transaction to ARC");
   console.log("\t submitTxs:\t\t Submit 10 transactions to ARC");
   console.log("\t printNewPrivateKey:\t Create and print a new random private key");
+  console.log("\t printPrivKeyWIF:\t Print private key in WIF format");
+  console.log("\t printPrivKeyHex:\t Print private key as hex string");
   console.log("\t printAddress:\t\t Print the address of the given private key");
   console.log("\t help:\t\t\t Print this help");
   console.log("flags:");
@@ -334,6 +348,14 @@ switch (command) {
 
   case "printAddress":
     printAddress();
+    break;
+
+  case "printPrivKeyWIF":
+    printWIF();
+    break;
+
+  case "printPrivKeyHex":
+    printPrivKeyHex();
     break;
 
   case "help":
